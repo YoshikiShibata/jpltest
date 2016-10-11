@@ -3,12 +3,7 @@
  */
 package jpl.ch01.ex01;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import jp.ne.sonet.ca2.yshibata.test.StdoutCapture;
 
 /**
