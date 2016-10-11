@@ -83,11 +83,10 @@ public final class StdoutCapture {
 
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
-            if (line.charAt(line.length() - 1) == '\n') {
+            char lastChar = line.charAt(line.length() - 1);
+            while (lastChar == '\n' || lastChar == '\r') {
                 line = line.substring(0, line.length() - 1);
-            }
-            if (line.charAt(line.length() - 1) == '\r') {
-                line = line.substring(0, line.length() - 1);
+                lastChar = line.charAt(line.length() - 1);
             }
             result[i] = line;
         }
