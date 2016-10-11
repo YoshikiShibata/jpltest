@@ -71,14 +71,14 @@ public final class StdoutCapture {
         byte[] bytes = baos.toByteArray();
         try {
             String out = new String(bytes, "UTF-8");
-            Assert.assertArrayEquals(trimLines(expected),
-                    trimLines(out.split(System.lineSeparator())));
+            Assert.assertArrayEquals(removeCRLF(expected),
+                    removeCRLF(out.split(System.lineSeparator())));
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(StdoutCapture.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private String[] trimLines(String[] lines) {
+    private String[] removeCRLF(String[] lines) {
         String[] result = new String[lines.length];
 
         for (int i = 0; i < lines.length; i++) {
