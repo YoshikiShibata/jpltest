@@ -60,7 +60,7 @@ public final class StdoutCapture {
 
     /**
      * Determines if the captured output equals to the specified argument.
-     * All NL and CR characters are ignored.
+     * All CR and LF characters are ignored.
      *
      * @param expected An array of expected output
      */
