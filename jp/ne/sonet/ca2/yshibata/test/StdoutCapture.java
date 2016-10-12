@@ -8,8 +8,10 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import junit.framework.AssertionFailedError;
 
 import org.junit.Assert;
+import org.junit.internal.ArrayComparisonFailure;
 
 /**
  *
@@ -68,13 +70,33 @@ public final class StdoutCapture {
         if (started) {
             throw new IllegalStateException("Has not stopped yet");
         }
-        byte[] bytes = baos.toByteArray();
+        
+        String[] trimmedExpected = removeCRLF(expected);
+        String[] trimmedResult = removeCRLF(toStringArray(baos.toByteArray()));
+        
+        try {
+            Assert.assertArrayEquals(trimmedExpected,trimmedResult);
+        } catch (ArrayComparisonFailure e) {
+            System.err.printf("%nResult is%n");
+            for (String s: trimmedResult) 
+                System.err.printf("%s%n", s);
+            
+            System.err.printf("%nBut want is%n");
+            for (String s: trimmedExpected)
+                System.err.printf("%s%n", s);
+            
+            System.err.println();
+            throw e;
+        }
+    }
+    
+    private String[] toStringArray(byte[] bytes) {
         try {
             String out = new String(bytes, "UTF-8");
-            Assert.assertArrayEquals(removeCRLF(expected),
-                    removeCRLF(out.split(System.lineSeparator())));
+            return out.split(System.lineSeparator());
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(StdoutCapture.class.getName()).log(Level.SEVERE, null, ex);
+            return new String[0];
         }
     }
 
