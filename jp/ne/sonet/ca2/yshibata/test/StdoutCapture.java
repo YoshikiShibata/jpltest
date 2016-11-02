@@ -8,7 +8,6 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.AssertionFailedError;
 
 import org.junit.Assert;
 import org.junit.internal.ArrayComparisonFailure;
@@ -73,7 +72,7 @@ public final class StdoutCapture {
         
         String[] trimmedExpected = removeCRLF(expected);
         String[] trimmedResult = removeCRLF(toStringArray(baos.toByteArray()));
-        
+
         try {
             Assert.assertArrayEquals(trimmedExpected,trimmedResult);
         } catch (ArrayComparisonFailure e) {
@@ -87,7 +86,9 @@ public final class StdoutCapture {
             
             System.err.println();
             throw e;
-        }
+        } catch (AssertionError e) {
+			throw e;
+		}
     }
     
     private String[] toStringArray(byte[] bytes) {
@@ -105,6 +106,10 @@ public final class StdoutCapture {
 
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
+			if (line.isEmpty()) {
+            	result[i] = line;
+				continue;
+			}
             char lastChar = line.charAt(line.length() - 1);
             while (lastChar == '\n' || lastChar == '\r') {
                 line = line.substring(0, line.length() - 1);
