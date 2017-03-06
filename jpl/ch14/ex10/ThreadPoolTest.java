@@ -85,10 +85,23 @@ public class ThreadPoolTest {
     }
 
     /**
-     * Returns the number of active threads.
+     * Returns the number of active threads excluding "ReaderThread" which was
+     * created by the Eclipse.
      */
-    private final int activeThreadCount() {
-        return Thread.currentThread().getThreadGroup().activeCount();
+    private int activeThreadCount() {
+        ThreadGroup tg = Thread.currentThread().getThreadGroup();
+        int activeCount = tg.activeCount();
+        if (activeCount >= 2) {
+            Thread[] threads = new Thread[activeCount];
+            tg.enumerate(threads);
+            for (Thread t : threads) {
+                if ("ReaderThread".equals(t.getName())) {
+                    activeCount--;
+                    break;
+                }
+            }
+        }
+        return activeCount;
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -348,9 +361,9 @@ public class ThreadPoolTest {
         ThreadGroup tg = Thread.currentThread().getThreadGroup();
         Thread[] threads = new Thread[tg.activeCount()];
         tg.enumerate(threads);
-        
+
         Thread current = Thread.currentThread();
-        
+
         try {
             Thread.sleep(100); // 100 ms
         } catch (InterruptedException e) {
@@ -361,6 +374,11 @@ public class ThreadPoolTest {
         for (int i = 0; i < 100000; i++) {
             for (Thread t : threads) {
                 if (t == null || t == current) {
+                    continue;
+                }
+
+                // Excludes the ReaderThread of Eclipse.
+                if ("ReaderThread".equals(t.getName())) {
                     continue;
                 }
 
