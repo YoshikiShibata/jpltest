@@ -86,7 +86,8 @@ public class ThreadPoolTest {
 
     /**
      * Returns the number of active threads excluding "ReaderThread" which was
-     * created by the Eclipse.
+     * created by the Eclipse and "Monitor Ctrl-Break" which was created by
+     * the IntelliJ.
      */
     private int activeThreadCount() {
         ThreadGroup tg = Thread.currentThread().getThreadGroup();
@@ -95,7 +96,8 @@ public class ThreadPoolTest {
             Thread[] threads = new Thread[activeCount];
             tg.enumerate(threads);
             for (Thread t : threads) {
-                if ("ReaderThread".equals(t.getName())) {
+                if ("ReaderThread".equals(t.getName())
+                        || "Monitor Ctrl-Break".equals(t.getName())) {
                     activeCount--;
                     break;
                 }
@@ -487,8 +489,10 @@ public class ThreadPoolTest {
                     continue;
                 }
 
-                // Excludes the ReaderThread of Eclipse.
-                if ("ReaderThread".equals(t.getName())) {
+                // Excludes the ReaderThread of Eclipse 
+                // and the Monitor Ctrl-Break of IntelliJ.
+                if ("ReaderThread".equals(t.getName())
+                        || "Monitor Ctrl-Break".equals(t.getName())) {
                     continue;
                 }
 
