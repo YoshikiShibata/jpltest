@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2012, 2013 RICOH Co., Ltd. All rights reserved.
+ * Copyright (C) 2019 Yoshiki Shibata. All rights reserved.
  */
 package jpl.ch14.ex10;
 
@@ -7,15 +8,20 @@ package jpl.ch14.ex10;
  * Simple Thread Pool class.
  *
  * This class can be used to dispatch an Runnable object to
- * be exectued by a thread.
+ * be exectued by a thread.<br><br>
  *
  * [Instruction]
- *  Implement one constructor and three methods.
- *  Don't forget to write a Test program to test this class.
- *  Pay attention to @throws tags in the javadoc.
- *  If needed, you can put "synchronized" keyword to methods.
- *  All classes for implementation must be private inside this class.
- *  Don't use java.util.concurrent package.
+ * <ul>
+ *  <li> Implement one constructor and three methods. </li>
+ *  <li> Don't forget to write a Test program to test this class. </li>
+ *  <li> Pay attention to @throws tags in the javadoc. </li>
+ *  <li> If needed, you can put "synchronized" keyword to methods. </li>
+ *  <li> All classes for implementation must be private inside this class. </li>
+ *  <li> Don't use java.util.concurrent package. </li>
+ *  <li> Don't use {@link java.lang.Thread#interrupt}  method to stop a thread</li>
+ *  </ul>
+ *
+ *  @author Yoshiki Shibata
  */
 public class ThreadPool {
     /**
@@ -41,7 +47,9 @@ public class ThreadPool {
     }
 
     /**
-     * Stop all threads and wait for their terminations.
+     * Stop all threads gracefully and wait for their terminations.
+	 * All requests dispatched before this method is invoked must complete
+	 * and this method also will wait for their completion.
      *
      * @throws IllegalStateException if threads has not been started.
      */
